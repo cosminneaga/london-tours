@@ -31,11 +31,22 @@ require("connection/dbConnection.php");
         $adminName = clean_input($_POST["admin-name"]);
         $password = clean_input($_POST["password"]);
         $query = "SELECT * FROM admin WHERE name = '$adminName' AND password = '" . md5($password) . "' ";
-        $result = mysqli_query($connection, $query) or die(mysqli_error());
+        $result = mysqli_query($connection, $query) or die(mysqli_connect_error());
         $rows = mysqli_num_rows($result);
         if ($rows == 1) {
+            $url = 'admin/dashboard.php';
             $_SESSION['admin-name'] = $adminName;
-            header("location: admin/dashboard.php");
+            if (!headers_sent()) {
+                header("location: ".$url."", true);
+                exit;
+            } else {
+                echo '<script type="text/javascript">';
+                echo 'window.location.href="'.$url.'";';
+                echo '</script>';
+                echo '<noscript>';
+                echo '<meta http-equiv="refresh" content="0;url='.$url.'" />';
+                echo '</noscript>'; exit;
+            }
         } else {
             $msg = "These admin details are not corresponding to our records!";
         }
