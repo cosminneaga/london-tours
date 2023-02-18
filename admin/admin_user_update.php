@@ -1,9 +1,8 @@
- <?php
- require('../connection/dbConnection.php');
+<?php
+require('../connection/dbConnection.php');
 
 
-if (isset($_POST['update'])) 
-{
+if (isset($_POST['update'])) {
 
     $UserID = $_GET['ID'];
     $fName = $_POST['fname'];
@@ -16,17 +15,19 @@ if (isset($_POST['update']))
     $pcode = $_POST['postcode'];
     $uname = $_POST['username'];
     $mail = $_POST['email'];
-   
-    $query = "update users set fname = '".$fName."', lname = '".$lName."', tel = '".$telephone."', gender = '".$gen."',
-    houseno = '".$houseno."', street = '".$st."', city = '".$town."', postcode = '".$pcode."', username = '".$uname."',
-    email = '".$mail."' where  id = '".$UserID."'  ";
 
-    $result = mysqli_query($connection,$query);
+    $query = "update users set fname = '" . $fName . "', lname = '" . $lName . "', tel = '" . $telephone . "', gender = '" . $gen . "',
+    houseno = '" . $houseno . "', street = '" . $st . "', city = '" . $town . "', postcode = '" . $pcode . "', username = '" . $uname . "',
+    email = '" . $mail . "' where  id = '" . $UserID . "'  ";
+
+    $result = mysqli_query($connection, $query);
     if ($result) {
         header("location: users_table.php");
-    }else{
+    } else {
         echo "Record Not Updated!!!";
     }
-}else{"location: users_table.php";}
+} else {
+    "location: users_table.php";
+}
 
- ?>
+?>

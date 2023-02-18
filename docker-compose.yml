@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+
+  london-tours-db-host:
+    container_name: london-tours-db-host
+    image: mariadb:latest
+    networks:
+      - london_tours
+    ports:
+      - "${DB_EXTERNAL_PORT}:${DB_PORT}"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      - london-tours-db-volume:/var/lib/mysql
+
+  london-tours-phpmyadmin:
+    container_name: london-tours-phpmyadmin
+    image: phpmyadmin:latest
+    networks:
+      - london_tours
+    ports:
+      - "${PHPMYADMIN_EXTERNAL_PORT}:${PHPMYADMIN_PORT}"
+    depends_on:
+      - london-tours-db-host
+    environment:
+      PMA_HOST: ${DB_HOST}
+      PMA_PORT: ${DB_PORT}
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+
+  london-tours-app:
+    container_name: london-tours-app
+    build:
+      context: .
+    networks:
+      - london_tours
+    ports:
+      - "${APP_EXTERNAL_PORT}:${APP_PORT}"
+    environment:
+      HOST: ${DB_HOST}
+      PORT: ${DB_PORT}
+      USER: ${DB_USER}
+      PASSWORD: ${DB_PASSWORD}
+      DATABASE: ${DB_NAME}
+    volumes:
+      - .:/var/www/html
+
+networks:
+  london_tours:
+    name: london_tours
+
+volumes:
+  london-tours-db-volume:
+    driver: local
